@@ -1,5 +1,6 @@
 <%--
  내부적으로 뭔가를 만들고 나서 보여주는 역할
+ 기본적으로 model, controller, service , dao 를 각각 있어야한다.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
