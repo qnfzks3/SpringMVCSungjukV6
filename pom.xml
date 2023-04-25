@@ -15,14 +15,10 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <junit.version>5.9.1</junit.version>
+        <spring.version>4.3.30.RELEASE</spring.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>4.3.30.RELEASE</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
@@ -36,7 +32,7 @@
             </exclusions>
         </dependency>
 
-        <!-- mariadb jdbc driver -->
+        <!--버전 설정 3개 mariadb jdbc driver   -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
@@ -45,9 +41,25 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
             <version>4.3.30.RELEASE</version>
         </dependency>
+
+
+
+
 
         <dependency>
             <groupId>javax.servlet</groupId>
