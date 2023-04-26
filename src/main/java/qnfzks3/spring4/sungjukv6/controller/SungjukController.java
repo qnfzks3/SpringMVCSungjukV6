@@ -3,10 +3,8 @@ package qnfzks3.spring4.sungjukv6.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import qnfzks3.spring4.sungjukv6.model.SungJukVO;
 import qnfzks3.spring4.sungjukv6.service.SungJukV6Service;
@@ -29,7 +27,7 @@ public class SungjukController {
 
         System.out.println(sjsrv.readSungJuk());
 
-        model.addAttribute("sjs",sjsrv.readSungJuk());//sungjuklist.jsp에 성정 조회결과 데이터를  sjs에 넣는다.
+        model.addAttribute("sjs",sjsrv.readSungJuk());//sungjuklist.jsp에 성적 조회결과 데이터를  sjs에 넣는다.
         return "sungjuklist";                  // 이 데이터를 sjs에 넣는 걸 sungjuklist 로 보낸다. - return으로 sungjuklist에서도 사용가능하게 함
                                                 //추천 책 읽어봐도된다.
                                                 */
@@ -47,5 +45,25 @@ public class SungjukController {
 
 
     }
+
+    //성적 입력폼 표시
+    @GetMapping("/add")
+    public String add(){
+        return "sungjuk";
+
+    }
+    
+    //성적 입력 처리
+    @PostMapping("/add")   //포스트
+    public ModelAndView addok(SungJukVO sj){  //이렇게 SungJukVO sj 를 적어주면 값이 자동으로 불러와진다.
+        ModelAndView mv=new ModelAndView();
+        mv.addObject("sj",sj);
+        mv.setViewName("sungjukok");               //불러와진 sj 를 그대로 mv에 "sj" 넣고 sungjukok에 보내준다.
+
+        return mv;
+
+    }
+
+
 
 }
