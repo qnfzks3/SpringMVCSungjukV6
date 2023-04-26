@@ -62,7 +62,7 @@ public class SungjukController {
         //sjsrv.computeSungJuk(sj); //이것만 있을 때 서비스의 총첨 평균 등급계산한 결과를(computeSungJuk)   - sj에 넣어준다.
         if (sjsrv.newSungJuk(sj)){ //sungjukseviceImpl에서 불린newSungJuk 의 값이 true,false로 리턴함 - > 만약 트루면 if 아랫 값 실행
             mv.addObject("sj",sj);
-            view="sungjukok"; //Sungjukv6dao에서 받아온 sj
+            view="sungjukok"; //Sungjukv6dao에서 받아온 cnt가 -1 상태라서 오류가 나오기때문에 sungjukfail 화면으로 나온다.
 
         }
 
