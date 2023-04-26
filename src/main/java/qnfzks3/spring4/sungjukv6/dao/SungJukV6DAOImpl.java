@@ -1,5 +1,7 @@
 package qnfzks3.spring4.sungjukv6.dao;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,8 +13,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+
+
 @Repository("sjdao")
 public class SungJukV6DAOImpl implements SungJukV4DAO {
+
+    private static final Logger logger = LogManager.getLogger(SungJukV6DAOImpl.class);
+    //debug,info,warn,error,fatal       오류 메세지 개수 - 우린 info 아님 erorr로 오류메세지를 넣자
+
     private JdbcTemplate jdbcTemplate;
 
     //jdbc.properties 에 정의한 SQL 가져오기     - 변수에 어떤 값들이 들어갔는지 ,
@@ -41,13 +49,13 @@ public class SungJukV6DAOImpl implements SungJukV4DAO {
         try{
             //매개변수 정의 -
             Object[] params = new Object[]{
-                    sj.getName(),sj.getKor(),sj.getEng(),sj.getMat(),sj.getTot(),sj.getAvg(),sj.getGrd()
+                    sj.getName(),sj.getKor(),sj.getEng(),sj.getMat(),sj.getTot(),sj.getAvg(),sj.getGrd()+""
             };
             cnt=jdbcTemplate.update(insertSQL,params); //sql문이 실행되어야 0보다 클수있음
 
         }catch (Exception ex){
-            System.out.println("insertSungJuk 오류!");
-            ex.printStackTrace();
+            logger.error("insertSungJuk 오류!!");
+            logger.info(ex.getMessage());
         }
 
         return cnt;
@@ -80,13 +88,30 @@ public class SungJukV6DAOImpl implements SungJukV4DAO {
     
 
     @Override
-    public SungJukVO selectOneSungJuk(int sjno) {
+    public SungJukVO selectOneSungJuk(int sjno) { //학생번호를 이용해서 데이터 조회
 
-         SungJukVO sj = null;
+        Object[] param=new Object[] {sjno};
+        RowMapper<SungJukVO>mapper=new SungJukOneMapper(); //알트 엔터 메서드 생성
+
+        SungJukVO sj = jdbcTemplate.queryForObject(selectOneSQL,mapper,param);
 
 
         return sj;
     }
+    private class SungJukOneMapper implements RowMapper<SungJukVO> { //rowmapper 알트 엔터해서 생성자를 만들어준다.
+
+        @Override
+        public SungJukVO mapRow(ResultSet rs, int i) throws SQLException {
+            SungJukVO sj=new SungJukVO(rs.getString(2),rs.getInt(3),rs.getInt(4),
+                    rs.getInt(5),rs.getInt(6),rs.getDouble(7),rs.getString(8).charAt(0));
+            sj.setSjno(rs.getInt(1));
+            sj.setRegdate(rs.getString(9));
+
+            return sj;
+        }
+    }
+
+
 
     @Override
     public int updateSungJuk(SungJukVO sj) {
@@ -108,5 +133,6 @@ public class SungJukV6DAOImpl implements SungJukV4DAO {
         return cnt;
     }
 
-    
+
+
 }

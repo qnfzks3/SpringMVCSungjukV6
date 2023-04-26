@@ -2,15 +2,15 @@
 <Configuration status="WARN">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>  <!--로그 메세지를 이렇게 찍겠다 설정-->
         </Console>
     </Appenders>
     <Loggers>
 
         <Logger name="org.springframework" level="info"/>
-        <Logger name="com.example.hellospring4" level="info"/>
+        <Logger name="qnfzks3.spring4.sungjukv6" level="info"/>
 
-        <Root level="error">
+        <Root level="error">  <!--로그를 띄워질 최소 오류를 error로 지정 - -->
             <AppenderRef ref="Console"/>
         </Root>
     </Loggers>

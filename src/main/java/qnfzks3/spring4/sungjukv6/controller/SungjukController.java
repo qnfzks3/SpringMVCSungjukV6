@@ -5,12 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import qnfzks3.spring4.sungjukv6.model.SungJukVO;
 import qnfzks3.spring4.sungjukv6.service.SungJukV6Service;
 
 
-
+/*controller는 작동 화면 연결*/
 
 @Controller
 public class SungjukController {
@@ -72,7 +73,23 @@ public class SungjukController {
         return mv;
 
     } //그냥 적어주면 한글은 깨져서 나오기때문에 web.xml에 따로 한글이 나오도록 지정을 해주어야한다.
+    
+    //성적 본문 조회 처리
+    @GetMapping("/view")  //@GetMapping("링크지정")
+    public ModelAndView view(@RequestParam int sjno){ //@RequestParam가 없어도 자동으로 써준다.- 자동으로 값을 가져와서 sjno에 넣어줌 int가아니라SungJukVO도 가능
+        ModelAndView mv=new ModelAndView();
+        String view = "sungjukfail";
+        SungJukVO sj=sjsrv.readOneSungJuk(sjno);
 
+        if (sj != null){
+            mv.addObject("sj",sj);
+            view = "sungjukview";
+
+        }
+        mv.setViewName(view);
+
+        return mv;
+    }
 
 
 }

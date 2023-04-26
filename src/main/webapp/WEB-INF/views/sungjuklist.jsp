@@ -30,7 +30,7 @@
         <%--for(SungJuk sj : sjs) 와 같다. sj의 타입은 안적어도 된다.--%>
         <c:forEach items="${sjs}" var="sj">
             <tr>
-                <td>${sj.name}</td>
+                <td><a href="/view?sjno=${sj.sjno}">${sj.sjno}</a> </td>
                 <td>${sj.kor}</td>
                 <td>${sj.eng}</td>
                 <td>${sj.mat}</td>
