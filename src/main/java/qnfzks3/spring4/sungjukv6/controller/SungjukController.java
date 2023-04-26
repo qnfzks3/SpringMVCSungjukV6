@@ -57,12 +57,21 @@ public class SungjukController {
     @PostMapping("/add")   //포스트
     public ModelAndView addok(SungJukVO sj){  //이렇게 SungJukVO sj 를 적어주면 값이 자동으로 불러와진다.
         ModelAndView mv=new ModelAndView();
-        mv.addObject("sj",sj);
-        mv.setViewName("sungjukok");               //불러와진 sj 를 그대로 mv에 "sj" 넣고 sungjukok에 보내준다.
+        String view = "sungjukfail"; //sungjukfail 는 오류가 발생했을때 /sungjukfail로 홈페이지 이동
+
+        //sjsrv.computeSungJuk(sj); //이것만 있을 때 서비스의 총첨 평균 등급계산한 결과를(computeSungJuk)   - sj에 넣어준다.
+        if (sjsrv.newSungJuk(sj)){ //sungjukseviceImpl에서 불린newSungJuk 의 값이 true,false로 리턴함 - > 만약 트루면 if 아랫 값 실행
+            mv.addObject("sj",sj);
+            view="sungjukok"; //Sungjukv6dao에서 받아온 sj
+
+        }
+
+        //mv.addObject("sj",sj);
+        mv.setViewName(view);               //불러와진 sj 를 그대로 mv에 "sj" 넣고 sungjukok에 보내준다.
 
         return mv;
 
-    }
+    } //그냥 적어주면 한글은 깨져서 나오기때문에 web.xml에 따로 한글이 나오도록 지정을 해주어야한다.
 
 
 
