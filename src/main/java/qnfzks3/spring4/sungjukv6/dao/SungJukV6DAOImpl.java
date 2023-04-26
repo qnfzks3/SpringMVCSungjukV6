@@ -36,11 +36,11 @@ public class SungJukV6DAOImpl implements SungJukV4DAO {
     
     @Override
     public int insertSungJuk(SungJukVO sj) {
-        int cnt = -1;
+       Object params = new Object[]{
+               sj.getName(),sj.getKor(),sj.getEng(),sj.getMat(),sj.getTot(),sj.getAvg()
+       };
 
-
-
-        return cnt;
+        return jdbcTemplate.update(insertSQL,params);
     }
 
     //2. SELECT부터  - 스프링이 연결하고 전부 다 해줄것임 - 컬렉션 만들고 jdbcTemplate 로 sql문 지정 끝
