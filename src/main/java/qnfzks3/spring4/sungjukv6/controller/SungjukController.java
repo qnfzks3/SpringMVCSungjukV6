@@ -3,12 +3,18 @@ package qnfzks3.spring4.sungjukv6.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import qnfzks3.spring4.sungjukv6.model.SungJukVO;
 import qnfzks3.spring4.sungjukv6.service.SungJukV6Service;
+
+import java.net.BindException;
+
+/*작동 방식 - dao-로 데이터 가져와서 서비스에서 가져온 데이터를 가지고 작동 방식 함수들을 정의하고 그걸 컨트롤러로 가져와 변수에 담아 jsp(출력)로 보내준다.*/
+ /*컨트롤러는 유저가 하는 행동에 대한 함수를 정의한 파일*/
 
 
 /*controller는 작동 화면 연결*/
@@ -56,6 +62,7 @@ public class SungjukController {
     
     //성적 입력 처리
     @PostMapping("/add")   //포스트
+    //@ExceptionHandler(BindException.class) //예외처리  원래는 트라이 켓치에서 했지만 이렇게 빈으로 할수있다.
     public ModelAndView addok(SungJukVO sj){  //이렇게 SungJukVO sj 를 적어주면 값이 자동으로 불러와진다.
         ModelAndView mv=new ModelAndView();
         String view = "sungjukfail"; //sungjukfail 는 오류가 발생했을때 /sungjukfail로 홈페이지 이동
@@ -73,7 +80,12 @@ public class SungjukController {
         return mv;
 
     } //그냥 적어주면 한글은 깨져서 나오기때문에 web.xml에 따로 한글이 나오도록 지정을 해주어야한다.
-    
+
+
+
+
+
+
     //성적 본문 조회 처리
     @GetMapping("/view")  //@GetMapping("링크지정")
     public ModelAndView view(@RequestParam int sjno){ //@RequestParam가 없어도 자동으로 써준다.- 자동으로 값을 가져와서 sjno에 넣어줌 int가아니라SungJukVO도 가능
@@ -90,6 +102,55 @@ public class SungjukController {
 
         return mv;
     }
+
+    @ExceptionHandler(BindException.class)
+    public String typeMismatchParam(BindException ex){
+
+        return "sungjukfail";
+    }
+
+    
+    //성적 수정
+    @GetMapping("/modify")
+    public ModelAndView modify(@RequestParam int sjno){
+        ModelAndView mv=new ModelAndView(); //1. 객체 만들고
+
+        mv.addObject("sj",sjsrv.readOneSungJuk(sjno)); //2. sj 라는 이름으로 성적 데이터를 담는다. 이걸 mv라 정의하고
+        mv.setViewName("sjmodify"); //3. 이 mv의 데이터 sj 를 데이터를 sjmodify 로 보냄
+        return mv; //4. 보내는걸 리턴 
+
+
+    }
+    @PostMapping("/modify")  //포스트 처리를 하지 않으면 작동하지 않는다.  - 이제 입력완료 버튼을 누르면 반응
+    public ModelAndView modifyok(SungJukVO sj){
+        ModelAndView mv = new ModelAndView();  //보내기 위한 객체 생성
+        String view = "sungjukfail";
+        if(sjsrv.modifySungJuk(sj)) //boolean이니까 데이터가 있으면 true 없으면 false
+            view="redirect:/view?sjno="+sj.getSjno();  //뷰 페이지
+
+        mv.setViewName(view); //view(위에 링크)로 보낸다.
+
+
+        return mv;
+
+
+
+    }
+
+
+
+
+
+    //성적 삭제 -vo dao service controller jsp
+    @GetMapping("/remove")
+    public String remove(int sjno){
+        sjsrv.removeSungJuk(sjno);
+        return "redirect:/list";  //redirect:/list 하면 - 리스트 화면을 재호출한다  재호출 - redirect 
+    }
+    
+    
+    //redirect = 클라이언트에게 /list를 서버에 요청하도록 지시      redirect-- 서버가 이쪽 주소로 다시 요청해 라는 의미(재요청)
+    //forword =  클라이언트에게 해당 주소로 이동하게 함
 
 
 }

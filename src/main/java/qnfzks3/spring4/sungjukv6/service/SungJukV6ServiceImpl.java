@@ -31,7 +31,13 @@ public class SungJukV6ServiceImpl implements SungJukV6Service {
     }
 
     public boolean modifySungJuk(SungJukVO sj) {
-        return false;
+        boolean result = false;
+        computeSungJuk(sj);//총 학점 , 평균 ,등급 구하는 함수 이 파일  아래 있음
+
+        
+        if (sjdao.updateSungJuk(sj)>0) result = true;
+
+        return result;
     }
 
     public SungJukVO readOneSungJuk(int sjno) {
