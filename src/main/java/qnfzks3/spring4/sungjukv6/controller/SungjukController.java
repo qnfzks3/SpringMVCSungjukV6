@@ -84,8 +84,11 @@ public class SungjukController {
 
 
 
-
-
+    // @GetMapping 과@PostMapping 에 대해서
+    // 먼져 get 은 받아오는 역할을 보통 한다. vo에서도 get으로 받아와서 set으로 내보냈다. 여기서도 같이 get은 받아오는 역할을한다 -HTTP GET요청
+    // post는 개시하다 출력을위해 보내는역할 - HTTP POST 요청 서버에 데이터를 전송하는데 사용
+    //
+    
     //성적 본문 조회 처리
     @GetMapping("/view")  //@GetMapping("링크지정")
     public ModelAndView view(@RequestParam int sjno){ //@RequestParam가 없어도 자동으로 써준다.- 자동으로 값을 가져와서 sjno에 넣어줌 int가아니라SungJukVO도 가능
@@ -95,7 +98,7 @@ public class SungjukController {
 
         if (sj != null){
             mv.addObject("sj",sj);
-            view = "sungjukview";
+            view = "sungjukview"; //이건 그냥 화면으로 이동
 
         }
         mv.setViewName(view);
@@ -121,12 +124,12 @@ public class SungjukController {
 
 
     }
-    @PostMapping("/modify")  //포스트 처리를 하지 않으면 작동하지 않는다.  - 이제 입력완료 버튼을 누르면 반응
+    @PostMapping("/modify")  //포스트 처리를 하지 않으면 작동하지 않는다.  - 이제 입력완료 버튼을 누르면 반응 -
     public ModelAndView modifyok(SungJukVO sj){
         ModelAndView mv = new ModelAndView();  //보내기 위한 객체 생성
         String view = "sungjukfail";
-        if(sjsrv.modifySungJuk(sj)) //boolean이니까 데이터가 있으면 true 없으면 false
-            view="redirect:/view?sjno="+sj.getSjno();  //뷰 페이지
+        if(sjsrv.modifySungJuk(sj)) //boolean이니까 데이터가 있으면 true 없으면 false -> 위에 인풋테그에 값을 넣었다면 true 아니면 false
+            view="redirect:/view?sjno="+sj.getSjno();  //뷰 페이지 --
 
         mv.setViewName(view); //view(위에 링크)로 보낸다.
 
@@ -142,11 +145,12 @@ public class SungjukController {
 
 
     //성적 삭제 -vo dao service controller jsp
-    @GetMapping("/remove")
+    @GetMapping("/remove")  //<- 이렇게 링크로 /remove로 가면 바로 실행된다. 아래가
     public String remove(int sjno){
         sjsrv.removeSungJuk(sjno);
         return "redirect:/list";  //redirect:/list 하면 - 리스트 화면을 재호출한다  재호출 - redirect 
-    }
+    }                              //redirect 로 하는건 우리가 해당 링크 번호(성적번호나,학번)로 클릭 했기 때문에 어떤 링크인지 모르니깐
+                                  //다시 뒤로 돌아가게 하기위해 redirect로 넣어준다.
     
     
     //redirect = 클라이언트에게 /list를 서버에 요청하도록 지시      redirect-- 서버가 이쪽 주소로 다시 요청해 라는 의미(재요청)

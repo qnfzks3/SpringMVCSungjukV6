@@ -57,8 +57,8 @@ public class SungJukV6ServiceImpl implements SungJukV6Service {
         boolean result=false;
 
         this.computeSungJuk(sj); //총점 평균 계산하고
-        logger.info(sj);
-
+        logger.info(sj);  //logger는  오류가 생겼을 때 (logger.~~) 이상의 오류를 출력한다. info error fatal 이런식으로 여태 우린 error만 봤기에
+                            // info 이상의 오류를 출력한다.
         if (sjdao.insertSungJuk(sj)>0) //값을 넘겼으면 +1보다 크기에 성공하면 true 실패 false
             result=true;
 

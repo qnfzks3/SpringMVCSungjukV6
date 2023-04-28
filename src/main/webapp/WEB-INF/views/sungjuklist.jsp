@@ -28,6 +28,7 @@
         </tr>
         <%--  <c: 하고 컨트롤 스페이스하면 사용할수있는 구문이 다나온다.--%>
         <%--for(SungJuk sj : sjs) 와 같다. sj의 타입은 안적어도 된다.--%>
+        <%--어떻게 /view?sjno=${sj.sjno} 로 각 번호마다 페이지가 만들어졌지?--%>
         <c:forEach items="${sjs}" var="sj">
             <tr>
                 <td><a href="/view?sjno=${sj.sjno}">${sj.sjno}</a> </td>

@@ -20,7 +20,7 @@
     <li>${sj.regdate}</li>
   </ul>
 
-  <p><a href="/modify?sjno=${sj.sjno}">수정하기</a> </p>
+  <p><a href="/modify?sjno=${sj.sjno}">수정하기</a> </p> <%--이게 어떻게 ? 따로 안만들었는데 , ?--%>
   <p><a href="/remove?sjno=${sj.sjno}">삭제하기</a> </p>
 
 </body>

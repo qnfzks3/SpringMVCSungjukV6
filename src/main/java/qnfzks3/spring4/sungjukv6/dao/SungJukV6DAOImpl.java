@@ -14,17 +14,19 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-
-@Repository("sjdao")
+//bean의 이름을 empdao로 지정,@Repository 어노테이션을 사용하여 Repository 클래스를 지정하면,
+// 해당 클래스가 데이터 액세스 레이어에서 데이터베이스와 상호 작용하는 데 사용된다는걸 Spring에게 알려주는 것입니다. -DAO는 데이터베이스와 연결시켜주는 파일
+@Repository("empdao")
 public class SungJukV6DAOImpl implements SungJukV4DAO {
 
     private static final Logger logger = LogManager.getLogger(SungJukV6DAOImpl.class);
     //debug,info,warn,error,fatal       오류 메세지 개수 - 우린 info 아님 erorr로 오류메세지를 넣자
 
     private JdbcTemplate jdbcTemplate;
-
     //jdbc.properties 에 정의한 SQL 가져오기     - 변수에 어떤 값들이 들어갔는지 ,
-    @Value("#{jdbc['insertSQL']}") private String insertSQL;
+
+    @Value("#{jdbc['insertSQL']}") private String insertSQL; //@Value("#{jdbc['insertSQL']}")는 SpEL 표현식을 사용하여
+                                                            // insertSQL 변수에 jdbc 빈(Bean)의 insertSQL 프로퍼티 값을 동적으로 할당합니다.
     @Value("#{jdbc['selectSQL']}") private String selectSQL;
     @Value("#{jdbc['selectOneSQL']}") private String selectOneSQL;
     @Value("#{jdbc['updateSQL']}") private String updateSQL;
@@ -37,6 +39,9 @@ public class SungJukV6DAOImpl implements SungJukV4DAO {
     public SungJukV6DAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+    //jdbcTemplate Java에서 데이터베이스 연동을 쉽게 하기 위한 프레임워크
+    //SQL 쿼리를 실행하고 결과를 처리하는 다양한 메서드를 제공  --SQL문으로 서버와 연결하기 위해 사용 @Autowired는
+    // jdbcTemplate 이걸 가져와 쓸 때 마다 자동으로 연동되게 함
 
 
 
@@ -48,7 +53,7 @@ public class SungJukV6DAOImpl implements SungJukV4DAO {
 
         try{
             //매개변수 정의 -
-            Object[] params = new Object[]{
+            Object[] params = new Object[]{ //항상 객체로 만들어서 데이터에 넣어줘야한다. post로 이 객체에는 데이터가 들어가고 맴버변수로 맞게 데이터가 들어감
                     sj.getName(),sj.getKor(),sj.getEng(),sj.getMat(),sj.getTot(),sj.getAvg(),sj.getGrd()+""
             };
             cnt=jdbcTemplate.update(insertSQL,params); //sql문이 실행되어야 0보다 클수있음
@@ -69,7 +74,7 @@ public class SungJukV6DAOImpl implements SungJukV4DAO {
         // 스프링컨테이너에 의해 자동으로 호출하는 메서드  - 단, 반드시 mapRow를 정의해주어야한다.
         //실행 순서 - 
         RowMapper<SungJukVO>mapper=new SungJukMapper();  //3. 이 줄을 사용하고 매서드를 생성한다. 그 후에 메서드안에 알트 인설트해서 MAPROW를 정의
-        return jdbcTemplate.query(selectSQL,mapper); //자바에서 while로 select 한걸 컬렉션에 넣어줬지만
+        return jdbcTemplate.query(selectSQL,mapper); //자바에서 while로 select를 컬렉션에 넣어줬지만
                                                         // 여기선 그냥 셀렉트를 mapper에 넣어라 끝  -jdbcTemplate 에 모든 데이터가 들어있도록
     }
     private class SungJukMapper implements RowMapper<SungJukVO> {
@@ -114,23 +119,18 @@ public class SungJukV6DAOImpl implements SungJukV4DAO {
 
 
     @Override
-    public int updateSungJuk(SungJukVO sj) {
+    public int updateSungJuk(SungJukVO sj) { //이걸 어떻게 업데이트할거야? 그건 서비스로
+        Object[] param = new Object[]{sj.getKor(),sj.getEng(),sj.getMat(),sj.getTot(),sj.getAvg(),sj.getGrd()+"",sj.getSjno()};
 
-        int cnt = -1;
-
-
-
-        return cnt;
+        return jdbcTemplate.update(updateSQL,param); //여기가 연결 되는 부분  jdbcTemplate 로 연결한다.
     }
 
     @Override
     public int deleteSungJuk(int sjno) {
 
-        int cnt = -1;
-
-
-
-        return cnt;
+        Object[] param = new Object[] {sjno}; //오브젝트 객체에 sjno를 찾아서
+        
+        return jdbcTemplate.update(deleteSQL,param); //sql 삭제하기
     }
 
 
